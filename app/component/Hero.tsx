@@ -94,7 +94,7 @@ export default function Giveaway() {
       {/* Header Section */}
       <header className="bg-green-700 text-white py-2 px-4 flex justify-between items-center">
         <h1 className="text-lg md:text-xl font-bold">{giveawayName}</h1>
-        <p className="text-sm">January 2025</p>
+        <p className="text-sm"></p>
       </header>
 
       {/* Hero Section */}
@@ -106,6 +106,7 @@ export default function Giveaway() {
           {giveawayName} - Start answering questions and win exclusive prizes
           worth <span className="font-bold text-green-700">₦400,000.00</span>.
         </p>
+        </main>
 
         {/* Full-Width Image */}
         <div className="mt-6">
@@ -117,7 +118,7 @@ export default function Giveaway() {
             className="w-full h-80 object-cover  shadow-lg mx-4"
           />
         </div>
-      </main>
+    
 
       {/* Quiz Section */}
       <section className="mt-2 mx-auto p-4 rounded-lg shadow-lg md:w-3/4 lg:w-2/3">
