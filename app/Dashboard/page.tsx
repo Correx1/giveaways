@@ -104,7 +104,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 w-64 bg-green-700 text-white p-6">
         <div className="flex items-center gap-2 mb-8">
-          <img src="/logo.png" alt="Logo" className="h-10 w-10" />
+          <Image width={20} height={20} src="/logo.png" alt="Logo" className="h-10 w-10" />
           <h1 className="text-xl font-bold">Giveaway Admin</h1>
         </div>
         <nav className="space-y-2">
@@ -385,7 +385,7 @@ export default function AdminDashboard() {
                         </CardHeader>
                         <CardContent>
 
-                          
+
                           <Image
                             src={prize.image}
                             width={100}
