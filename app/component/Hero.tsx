@@ -1,203 +1,130 @@
-'use client'
-import Image from "next/image";
-import { useState } from "react";
+'use client';
+import Image from 'next/image';
+import { useState, useEffect, SetStateAction } from 'react';
+import { motion } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { Button } from '@/components/ui/button'; // Assuming you're using shadcn's Button
+import { Input } from '@/components/ui/input'; // Assuming you're using shadcn's Input
 
 export default function Giveaway() {
-  const giveawayName = "Mega Star Giveaway 2025";
+  const giveawayName = 'Mega Star Giveaway 2025';
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
 
-  const questions = [
-    {
-      question: "What is your favorite color?",
-      answers: ["Red", "Blue"],
-      correct: "Blue",
-    },
-    {
-      question: "What is your favorite month?",
-      answers: ["January", "February"],
-      correct: "January",
-    },
-    {
-      question: "Which do you prefer?",
-      answers: ["Cats", "Dogs"],
-      correct: "Dogs",
-    },
-    {
-      question: "Which is your dream destination?",
-      answers: ["Paris", "Dubai"],
-      correct: "Paris",
-    },
-    {
-      question: "What is your favorite hobby?",
-      answers: ["Reading", "Traveling"],
-      correct: "Reading",
-    },
-  ];
+  // Countdown timer
+  useEffect(() => {
+    if (timeLeft === 0) return;
 
-  const comments = [
-    {
-      name: "Samuel Ade",
-      comment:
-        "I can't believe it! I won ₦400,000. Thanks, Mega Star Giveaway!",
-      likes: 15,
-      dislikes: 1,
-      image: "/us.png",
-    },
-    {
-      name: "Aisha Bello",
-      comment: "Wow, this is legit! I just received my prize.",
-      likes: 20,
-      dislikes: 2,
-      image: "/us.png",
-    },
-    {
-      name: "Tunde Ojo",
-      comment: "I told my friends, and they joined too. Great giveaway!",
-      likes: 10,
-      dislikes: 0,
-      image: "/us.png",
-    },
-    {
-      name: "Chioma Okafor",
-      comment: "I'm so happy I participated. Thank you, Mega Star Giveaway!",
-      likes: 12,
-      dislikes: 1,
-      image: "/us.png",
-    },
-    {
-      name: "Ahmed Musa",
-      comment: "Best experience ever! I'm thrilled with my prize.",
-      likes: 18,
-      dislikes: 3,
-      image: "/us.png",
-    },
-  ];
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isResultVisible, setIsResultVisible] = useState(false);
-  const [selectedCongrats, setSelectedCongrats] = useState("");
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
-  // Handle answer click
-  const handleAnswerClick = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      // Show result popup
-      setSelectedCongrats(
-        "Congratulations! You're one of our lucky winners. Thank you for participating!"
-      );
-      setIsResultVisible(true);
-    }
+  // Format time
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  // Handle form submission
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen font-sans">
-      {/* Header Section */}
-      <header className="bg-green-700 text-white py-2 px-4 flex justify-between items-center">
-        <h1 className="text-lg md:text-xl font-bold">{giveawayName}</h1>
-        <p className="text-sm"></p>
+    <div className="min-h-screen bg-gradient-to-br from-green-700 to-green-900 font-sans text-white">
+      {/* Header */}
+      <header className="bg-green-800/50 py-4 px-6 flex justify-between items-center shadow-lg">
+        <h1 className="text-xl md:text-2xl font-bold">{giveawayName}</h1>
+        <p className="text-sm">Time Left: {formatTime(timeLeft)}</p>
       </header>
 
       {/* Hero Section */}
-      <main className="mt-6 mx-auto md:w-3/4 lg:w-2/3 ">
-        <h2 className="text-2xl md:text-3xl font-bold text-green-700 text-center">
-          Congratulations!
-        </h2>
-        <p className="text-gray-800 text-center mx-5 ">
-          {giveawayName} - Start answering questions and win exclusive prizes
-          worth <span className="font-bold text-green-700">₦400,000.00</span>.
+      <motion.main
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="flex flex-col items-center justify-center text-center py-12 px-4"
+      >
+        <motion.h2
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="text-4xl md:text-5xl font-bold mb-4"
+        >
+          Congratulations! 🎉
+        </motion.h2>
+        <p className="text-lg md:text-xl mb-8 max-w-2xl">
+          Participate in the {giveawayName} and stand a chance to win exclusive
+          prizes worth{' '}
+          <span className="font-bold text-yellow-300">₦400,000.00</span>!
         </p>
-        </main>
 
-        {/* Full-Width Image */}
-        <div className="mt-6">
+        {/* Floating Gift Animation */}
+        <motion.div
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="mb-8"
+        >
           <Image
-            src="/gv.png"
-            alt="Mega Star Giveaway"
-            width={1920}
-            height={600}
-            className="w-full h-80 object-cover  shadow-lg mx-4"
+            src="/gv.png" // Replace with your gift image
+            alt="Gift"
+            width={100}
+            height={100}
+            className="w-24 h-24"
           />
-        </div>
-    
+        </motion.div>
 
-      {/* Quiz Section */}
-      <section className="mt-2 mx-auto p-4 rounded-lg shadow-lg md:w-3/4 lg:w-2/3">
-        <h3 className="text-lg md:text-xl font-bold text-green-700 text-center">
-          Question {currentQuestion + 1} of {questions.length}
-        </h3>
-        <p className="text-gray-800 text-center mt-4">
-          {questions[currentQuestion].question}
-        </p>
-        <div className="mt-6 space-y-4">
-          {questions[currentQuestion].answers.map((answer, index) => (
-            <button
-              key={index}
-              onClick={handleAnswerClick}
-              className="w-full bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded-lg text-center"
+        {/* Entry Form */}
+        {!isSubmitted ? (
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="w-full max-w-md space-y-4"
+          >
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
+              className="bg-white/10 border-none text-white placeholder:text-white/70"
+              required
+            />
+            <Button
+              type="submit"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-6 text-lg"
             >
-              {answer}
-            </button>
-          ))}
-        </div>
-      </section>
+              Enter Now
+            </Button>
+          </motion.form>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl font-bold text-yellow-300"
+          >
+            🎉 Thank you for entering! Good luck! 🎉
+          </motion.div>
+        )}
+      </motion.main>
 
-      {/* Comments Section */}
-      <section className="mt-8 mx-auto p-6 bg-white rounded-lg shadow-lg md:w-3/4 lg:w-2/3">
-        <h3 className="text-lg md:text-xl font-bold text-green-700">
-          Recent Comments
-        </h3>
-        <div className="mt-4 space-y-6">
-          {comments.map((comment, index) => (
-            <div
-              key={index}
-              className="flex items-center space-x-4 bg-gray-50 p-4 rounded-lg shadow-sm"
-            >
-              <Image
-                src={comment.image}
-                alt={comment.name}
-                width={50}
-                height={50}
-                className="rounded-full"
-              />
-              <div>
-                <p className="font-bold text-gray-800">{comment.name}</p>
-                <p className="text-gray-600 text-sm">{comment.comment}</p>
-                <div className="flex items-center space-x-2 text-gray-500 text-sm mt-2">
-                  <button>👍 {comment.likes}</button>
-                  <button>👎 {comment.dislikes}</button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <footer className="bg-green-700 text-center text-white py-4 mt-6">
-    <p className="text-sm">&copy; 2025 Mega Gifting. All rights reserved.</p>
-  </footer>
-
-      {/* Result Popup */}
-      {isResultVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 lg:w-1/3 relative">
-            {/* Sticker Simulation */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-green-700 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-lg">
-              🎉
-            </div>
-            <h3 className="text-lg md:text-xl font-bold text-green-700 text-center mt-10">
-              {selectedCongrats}
-            </h3>
-            <div className="mt-6 flex justify-center">
-              <button
-                onClick={() => setIsResultVisible(false)}
-                className="bg-gray-700 hover:bg-gray-800 text-white py-2 px-6 rounded-lg text-md font-semibold shadow-md"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Footer */}
+      <footer className="bg-green-800/50 py-4 text-center text-sm">
+        <p>&copy; 2025 Mega Gifting. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
