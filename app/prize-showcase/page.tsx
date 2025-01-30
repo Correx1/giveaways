@@ -13,7 +13,7 @@ const prizes = [
     description: 'The latest iPhone with cutting-edge features.',
   },
   {
-    id: 1,
+    id: 2,
     name: 'Macbook',
     image: '/macbook.jpg',
     description: 'The latest macbook pro M3.',

@@ -1,6 +1,6 @@
 // app/admin/dashboard/page.tsx
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Card,
   CardHeader,
@@ -23,8 +23,6 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -35,8 +33,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Home, Gift, Users, Settings, LogOut, ChevronDown, Menu } from 'lucide-react';
 import Image from 'next/image';
-import { Bar, BarChart } from 'recharts';
-import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { BarChart, ResponsiveContainer, Bar } from 'recharts';
 
 // Mock Data
 const mockGiveaways = [
@@ -107,25 +104,43 @@ const chartData = [
   { name: 'Nintendo Switch', participants: 400, prizesWon: 60 },
 ];
 
-const chartConfig = {
-  participants: {
-    label: 'Participants',
-    color: '#2563eb',
-  },
-  prizesWon: {
-    label: 'Prizes Won',
-    color: '#60a5fa',
-  },
-} satisfies ChartConfig;
-
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Prevent dragging
+  // useEffect(() => {
+  //   document.body.style.userSelect = 'none';
+  //   document.body.style.webkitUserDrag = 'none';
+  //   return () => {
+  //     document.body.style.userSelect = '';
+  //     document.body.style.webkitUserDrag = '';
+  //   };
+  // }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" />
+      )}
+
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         className={`fixed inset-y-0 left-0 z-40 w-64 bg-green-700 text-white p-6 transition-transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
@@ -144,10 +159,24 @@ export default function AdminDashboard() {
           <Button
             variant="ghost"
             className="w-full justify-start text-white hover:bg-green-600"
-            onClick={() => setActiveTab('overview')}
+            onClick={() => {
+              setActiveTab('overview');
+              setIsSidebarOpen(false);
+            }}
           >
             <Home className="mr-2 h-4 w-4" />
             Overview
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-white hover:bg-green-600"
+            onClick={() => {
+              setActiveTab('prizes');
+              setIsSidebarOpen(false);
+            }}
+          >
+            <Gift className="mr-2 h-4 w-4" />
+            Prizes
           </Button>
 
           <DropdownMenu>
@@ -164,7 +193,12 @@ export default function AdminDashboard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuItem onClick={() => setActiveTab('giveaways')}>
+              <DropdownMenuItem
+                onClick={() => {
+                  setActiveTab('giveaways');
+                  setIsSidebarOpen(false);
+                }}
+              >
                 Manage Giveaways
               </DropdownMenuItem>
               <DropdownMenuItem>Create New</DropdownMenuItem>
@@ -175,7 +209,10 @@ export default function AdminDashboard() {
           <Button
             variant="ghost"
             className="w-full justify-start text-white hover:bg-green-600"
-            onClick={() => setActiveTab('users')}
+            onClick={() => {
+              setActiveTab('users');
+              setIsSidebarOpen(false);
+            }}
           >
             <Users className="mr-2 h-4 w-4" />
             Participants
@@ -236,7 +273,8 @@ export default function AdminDashboard() {
         {/* Main Dashboard Area */}
         <main className="p-4 sm:p-6">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-green-50 p-2 rounded-lg">
+            {/* Hide tabs on mobile */}
+            <TabsList className="hidden lg:grid w-full grid-cols-4 bg-green-50 p-2 rounded-lg">
               <TabsTrigger value="overview" className="rounded-md">
                 Overview
               </TabsTrigger>
@@ -309,28 +347,28 @@ export default function AdminDashboard() {
                 </Card>
               </div>
 
-              {/* BarChart Section */}
+              {/* Responsive BarChart */}
               <Card className="mt-6 bg-white shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-green-900">
                     Participants vs Prizes Won
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-64">
+                <CardContent className="h-[50vh]">
+                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData}>
                       <Bar
                         dataKey="participants"
-                        fill="var(--color-participants)"
+                        fill="#2563eb"
                         radius={4}
                       />
                       <Bar
                         dataKey="prizesWon"
-                        fill="var(--color-prizesWon)"
+                        fill="#60a5fa"
                         radius={4}
                       />
                     </BarChart>
-                  </ChartContainer>
+                  </ResponsiveContainer>
                 </CardContent>
               </Card>
             </TabsContent>
