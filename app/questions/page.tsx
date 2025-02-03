@@ -108,23 +108,28 @@ export default function QuestionsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="flex flex-col items-center justify-center flex-1 px-6 py-12"
-      >
+      > 
         {!isQuestionsComplete ? (
-          <div className="w-full max-w-3xl bg-white/10 p-6 rounded-xl shadow-lg">
-            <h3 className="text-xl font-bold text-yellow-300">Question {currentQuestion + 1} of {questions.length}</h3>
-            <p className="text-lg mt-2">{questions[currentQuestion].question}</p>
-            <div className="space-y-3 mt-6">
-              {questions[currentQuestion].answers.map((answer, index) => (
-                <Button
-                  key={index}
-                  onClick={handleNextQuestion}
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-3 rounded-lg shadow"
-                >
-                  {answer}
-                </Button>
-              ))}
-            </div>
-          </div>
+             <>
+             <h2 className="text-xl sm:text-2xl  md:text-3xl font-bold text-yellow-300 mb-4">One step ahead to win big 🎉</h2>
+             <div className="w-full max-w-3xl bg-white/10 p-6 rounded-xl shadow-lg">
+                      <h3 className="text-xl font-bold text-yellow-300">Question {currentQuestion + 1} of {questions.length}</h3>
+                      <p className="text-lg mt-2">{questions[currentQuestion].question}</p>
+                      <div className="space-y-3 mt-6">
+                          {questions[currentQuestion].answers.map((answer, index) => (
+                              <Button
+                                  key={index}
+                                  onClick={handleNextQuestion}
+                                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-3 rounded-lg shadow"
+                              >
+                                  {answer}
+                              </Button>
+                          ))}
+                      </div>
+                  </div>
+                  </>
+
+
         ) : !showGiftModal ? (
           <div className="text-center">
             <motion.h3 className="text-3xl font-bold text-yellow-300">🎉 Congratulations! 🎉</motion.h3>
