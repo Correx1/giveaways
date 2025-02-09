@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
-import { FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebook, FaWhatsapp } from 'react-icons/fa';
+import { FaXTwitter } from "react-icons/fa6";
 import Image from 'next/image';
 
 const prizes = [
@@ -98,7 +99,7 @@ export default function QuestionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-800 to-green-900 text-white flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-800 to-green-900 text-white flex flex-col">
       <header className="bg-green-900/80 py-4 px-6 flex justify-between items-center shadow-md">
         <h1 className="text-2xl font-extrabold">Mega Star Giveaway 2025</h1>
       </header>
@@ -108,31 +109,27 @@ export default function QuestionsPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="flex flex-col items-center justify-center flex-1 px-6 py-12"
-      > 
-        {!isQuestionsComplete ? (
-             <>
-             <h2 className="text-xl sm:text-2xl  md:text-3xl font-bold text-yellow-300 mb-4">One step ahead to win big 🎉</h2>
-             <div className="w-full max-w-3xl bg-white/10 p-6 rounded-xl shadow-lg">
-                      <h3 className="text-xl font-bold text-yellow-300">Question {currentQuestion + 1} of {questions.length}</h3>
-                      <p className="text-lg mt-2">{questions[currentQuestion].question}</p>
-                      <div className="space-y-3 mt-6">
-                          {questions[currentQuestion].answers.map((answer, index) => (
-                              <Button
-                                  key={index}
-                                  onClick={handleNextQuestion}
-                                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-3 rounded-lg shadow"
-                              >
-                                  {answer}
-                              </Button>
-                          ))}
-                      </div>
-                  </div>
-                  </>
-
-
-        ) : !showGiftModal ? (
+      >
+       {!isQuestionsComplete ? (
+  <div className="w-full max-w-3xl bg-white/10 p-6 rounded-xl shadow-lg">
+    <h2 className="text-lg sm:text-xl md:text-2xl text-center font-bold text-yellow-300 mb-5">Get Ready for Your Chance to Win Big! </h2>
+    <h3 className="text-xl font-bold text-yellow-300">Question {currentQuestion + 1} of {questions.length}</h3>
+    <p className="text-lg mt-2">{questions[currentQuestion].question}</p>
+    <div className="space-y-3 mt-6">
+      {questions[currentQuestion].answers.map((answer, index) => (
+        <Button
+          key={index}
+          onClick={handleNextQuestion}
+          className="w-full bg-yellow-400 hover:bg-yellow-500 text-green-900 font-bold py-3 rounded-lg shadow"
+        >
+          {answer}
+        </Button>
+      ))}
+    </div>
+  </div>
+    ) : !showGiftModal ? (
           <div className="text-center">
-            <motion.h3 className="text-3xl font-bold text-yellow-300">🎉 Congratulations! 🎉</motion.h3>
+            <motion.h3 className="text-3xl font-bold text-yellow-300">Congratulations! 🎉</motion.h3>
             <p className="text-lg mt-2">Share this giveaway to unlock your prize.</p>
             <div className="w-full bg-gray-300 rounded-full h-3 my-4">
               <div className="bg-yellow-400 h-3 rounded-full" style={{ width: `${(shareCount / 3) * 100}%` }}></div>
@@ -140,21 +137,21 @@ export default function QuestionsPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <Button
                 onClick={() => handleShare('twitter')}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
+                className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-5 rounded-lg flex items-center gap-2"
               >
-                <FaTwitter size={20} /> Twitter
+                <FaXTwitter size={20} /> 
               </Button>
               <Button
                 onClick={() => handleShare('facebook')}
-                className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
+                className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-5 rounded-lg flex items-center gap-2"
               >
-                <FaFacebook size={20} /> Facebook
+                <FaFacebook size={20} /> 
               </Button>
               <Button
                 onClick={() => handleShare('whatsapp')}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-5 rounded-lg flex items-center gap-2"
               >
-                <FaWhatsapp size={20} /> WhatsApp
+                <FaWhatsapp size={20} /> 
               </Button>
             </div>
           </div>
